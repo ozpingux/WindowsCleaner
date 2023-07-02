@@ -1,5 +1,7 @@
 @echo off
 cls
+::Clean Manually HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList
+::This is not a complete script!!!; supplement it with other tools if you wish. 
 netsh wlan delete profile *
 ipconfig /flushdns 
 powershell -Command "Clear-DnsClientCache"
@@ -31,6 +33,7 @@ attrib /d /s -r -h -s C:\Windows\AppCompat\Programs\Amcache\*.*
 attrib /d /s -r -h -s C:\Windows\appcompat\Programs\*.*
 attrib /d /s -r -h -s C:\ProgramData\Microsoft\Diagnosis\EventTranscript\*.*
 attrib /d /s -r -h -s %UserProfile%\AppData\Local\Microsoft\Windows\Notifications\*.*
+attrib /d /s -r -h -s "%userprofile%\AppData\Local\Microsoft\Terminal Server Client\*.*"
 net stop WSearch
 powershell -Command "Stop-Service -Name WSearch -Force"
 attrib /d /s -r -h -s C:\ProgramData\Microsoft\Search\Data\Applications\Windows\*.*
@@ -64,6 +67,7 @@ del /f /s /q C:\Windows\AppCompat\Programs\Amcache\sysmain.sdb
 del /f /s /q C:\Windows\AppCompat\Programs\Amcache\*.*
 del /f /s /q C:\ProgramData\Microsoft\Diagnosis\EventTranscript\*.*
 del /f /s /q C:\Windows\appcompat\Programs\*.*
+del /f /s /q "%userprofile%\AppData\Local\Microsoft\Terminal Server Client\*.*"
 del /f /s /q C:\Windows\Prefetch\*.pf
 RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 8
 erase "%LOCALAPPDATA%\Microsoft\Windows\Tempor~1\*.*" /f /s /q
