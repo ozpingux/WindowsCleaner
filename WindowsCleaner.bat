@@ -34,6 +34,10 @@ attrib /d /s -r -h -s C:\Windows\appcompat\Programs\*.*
 attrib /d /s -r -h -s C:\ProgramData\Microsoft\Diagnosis\EventTranscript\*.*
 attrib /d /s -r -h -s %UserProfile%\AppData\Local\Microsoft\Windows\Notifications\*.*
 attrib /d /s -r -h -s "%userprofile%\AppData\Local\Microsoft\Terminal Server Client\*.*"
+attrib /d /s -r -h -s C:\ProgramData\Microsoft\Windows\WER\*.*
+attrib /d /s -r -h -s %userprofile%\Appdata\Local\Microsoft\Windows\WER\*.*
+attrib /d /s -r -h -s %windir%\System32\LogFiles\Sum\*.*
+attrib /d /s -r -h -s C:\Windows\apppatch\*.sdb
 net stop WSearch
 powershell -Command "Stop-Service -Name WSearch -Force"
 attrib /d /s -r -h -s C:\ProgramData\Microsoft\Search\Data\Applications\Windows\*.*
@@ -68,6 +72,10 @@ del /f /s /q C:\Windows\AppCompat\Programs\Amcache\*.*
 del /f /s /q C:\ProgramData\Microsoft\Diagnosis\EventTranscript\*.*
 del /f /s /q C:\Windows\appcompat\Programs\*.*
 del /f /s /q "%userprofile%\AppData\Local\Microsoft\Terminal Server Client\*.*"
+del /f /s /q C:\ProgramData\Microsoft\Windows\WER\*.*
+del /f /s /q %userprofile%\Appdata\Local\Microsoft\Windows\WER\*.*
+del /f /s /q C:\Windows\apppatch\*.sdb
+del /f /s /q  %windir%\System32\LogFiles\Sum\*.*
 del /f /s /q C:\Windows\Prefetch\*.pf
 RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 8
 erase "%LOCALAPPDATA%\Microsoft\Windows\Tempor~1\*.*" /f /s /q
@@ -96,6 +104,7 @@ REG ADD "HKEY_USERS\%usersid%\Software\Microsoft\Windows\CurrentVersion\Search\R
 REG DELETE "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\bam\UserSettings\%usersid%" /va /f
 REG DELETE "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\bam\UserSettings\%usersid%" /va /f
 REG DELETE "HKEY_USERS\%usersid%\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Compatibility Assistant\Store" /va /f
+REG DELETE "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\WordWheelQuery" /va /f 
 REG DELETE  "HKEY_USERS\%usersid%\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers" /va /f
 REG DELETE "HKEY_USERS\%usersid%\Software\Microsoft\Windows\CurrentVersion\Explorer\MountPoints2" /f
 REG ADD "HKEY_USERS\%usersid%\Software\Microsoft\Windows\CurrentVersion\Explorer\MountPoints2"
@@ -142,6 +151,7 @@ rd /s /q d:\$Recycle.bin
 del /s /f /q %WinDir%\Prefetch\*.*
 del /f /s /q %userprofile%\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v ClearPageFileAtShutdown /t REG_DWORD /d 1 /f
+fsutil behavior set encryptpagingfile 1
 powercfg.exe /hibernate off
 powershell -Command "Remove-Item -Path "C:\hiberfil.sys" -Force"
 powershell.exe -Command "Clear-History"
