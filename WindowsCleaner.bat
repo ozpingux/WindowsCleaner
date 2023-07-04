@@ -13,6 +13,7 @@ taskkill /F /IM chrome.exe
 taskkill /F /IM teams.exe
 taskkill /f /t /fi "IMAGENAME eq teams.exe"
 fsutil behavior set encryptpagingfile 1
+fsutil behavior set disablelastaccess 1
 attrib /d /s -r -h -s "%LocalAppData%\Microsoft\Windows\Explorer\thumbcache*"
 attrib /d /s -r -h -s %userprofile%\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt
 attrib /d /s -r -h -s C:\ProgramData\Microsoft\Wlansvc\Profiles\Interfaces\*
@@ -38,6 +39,7 @@ attrib /d /s -r -h -s C:\ProgramData\Microsoft\Windows\WER\*.*
 attrib /d /s -r -h -s %userprofile%\Appdata\Local\Microsoft\Windows\WER\*.*
 attrib /d /s -r -h -s %windir%\System32\LogFiles\Sum\*.*
 attrib /d /s -r -h -s C:\Windows\apppatch\*.sdb
+attrib /d /s -r -h -s %windir%\SoftwareDistribution\DataStore\*.*
 net stop WSearch
 powershell -Command "Stop-Service -Name WSearch -Force"
 attrib /d /s -r -h -s C:\ProgramData\Microsoft\Search\Data\Applications\Windows\*.*
@@ -76,6 +78,7 @@ del /f /s /q C:\ProgramData\Microsoft\Windows\WER\*.*
 del /f /s /q %userprofile%\Appdata\Local\Microsoft\Windows\WER\*.*
 del /f /s /q C:\Windows\apppatch\*.sdb
 del /f /s /q  %windir%\System32\LogFiles\Sum\*.*
+del /f /s /q %windir%\SoftwareDistribution\DataStore\*.*
 del /f /s /q C:\Windows\Prefetch\*.pf
 RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 8
 erase "%LOCALAPPDATA%\Microsoft\Windows\Tempor~1\*.*" /f /s /q
