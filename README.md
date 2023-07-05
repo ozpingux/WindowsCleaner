@@ -1,3 +1,4 @@
-# WindowsCleaner
+# Windows Cleaner
 Windows Trace Cleaner
-Basic anti forensic script for windows
+
+Anti forensic script for windows
