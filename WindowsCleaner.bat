@@ -1,7 +1,9 @@
 @echo off
 cls
-::Clean Manually HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList
+::Clean Manually for deleted users on Windows HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList
 ::This is not a complete script!!!; supplement it with other tools if you wish. 
+::This script has already been tested on Windows 10
+::I am not responsible for any use that may be made of it. It is for research purposes only. 
 netsh wlan delete profile *
 ipconfig /flushdns 
 powershell -Command "Clear-DnsClientCache"
@@ -12,8 +14,20 @@ taskkill /F /IM iexplore.exe
 taskkill /F /IM chrome.exe
 taskkill /F /IM teams.exe
 taskkill /f /t /fi "IMAGENAME eq teams.exe"
+taskkill /F /IM explorer.exe 
+::Disable prefetch and Stand By - Experimental 
+::reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v EnablePrefetcher /t REG_DWORD /d 0 /f
+::reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v EnableSuperfetch /t REG_DWORD /d 0 /f
+::reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power" /v CsEnabled /t REG_DWORD /d 0 /f
 fsutil behavior set encryptpagingfile 1
 fsutil behavior set disablelastaccess 1
+reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\UserAssist\Settings" /v "NoLog" /t REG_DWORD /d 1 /f
+auditpol /clear /y 
+auditpol /remove /allusers
+powershell -Command "Disable-ComputerRestore -Drive "C:""
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore" /v "DisableSR" /t REG_DWORD /d 1 /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting" /v Disabled /t REG_DWORD /d 1 /f
+reg delete "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\TypedPaths" /va /f
 attrib /d /s -r -h -s "%LocalAppData%\Microsoft\Windows\Explorer\thumbcache*"
 attrib /d /s -r -h -s %userprofile%\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt
 attrib /d /s -r -h -s C:\ProgramData\Microsoft\Wlansvc\Profiles\Interfaces\*
@@ -160,6 +174,7 @@ powercfg.exe /hibernate off
 powershell -Command "Remove-Item -Path "C:\hiberfil.sys" -Force"
 powershell.exe -Command "Clear-History"
 powershell.exe -Command "Remove-Item (Get-PSReadlineOption).HistorySavePath"
+start explorer.exe 
 doskey /listsize=0
 doskey /reinstall 
 pause
