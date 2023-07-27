@@ -15,6 +15,14 @@ taskkill /F /IM chrome.exe
 taskkill /F /IM teams.exe
 taskkill /f /t /fi "IMAGENAME eq teams.exe"
 taskkill /F /IM explorer.exe 
+net stop eventlog /y
+net stop eventlog-service /y
+net stop eventlog-service-keywords /y
+net stop eventlog-service-winevent /y
+reg add 'HKLM\SYSTEM\CurrentControlSet\Services\eventlog' /v Start /t REG_DWORD /d 4 /f
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem" /v NtfsDisableLastAccessUpdate /t REG_DWORD /d 1 /f
+powershell -Command "Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "NtfsDisableLastAccessUpdate" -Value 1"
+fsutil usn deletejournal /d C:
 ::Disable prefetch and Stand By - Experimental 
 ::reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v EnablePrefetcher /t REG_DWORD /d 0 /f
 ::reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v EnableSuperfetch /t REG_DWORD /d 0 /f
@@ -174,6 +182,7 @@ powercfg.exe /hibernate off
 powershell -Command "Remove-Item -Path "C:\hiberfil.sys" -Force"
 powershell.exe -Command "Clear-History"
 powershell.exe -Command "Remove-Item (Get-PSReadlineOption).HistorySavePath"
+for /F "tokens=*" %1 in ('wevtutil.exe el') DO wevtutil.exe cl "%1"
 start explorer.exe 
 doskey /listsize=0
 doskey /reinstall 
